@@ -80,6 +80,7 @@
 #include "nrf_log_default_backends.h"
 
 #include "SFM10R1.h"
+//#include "ui.h"
 
 #include "iot_trace.h"
 
@@ -841,24 +842,27 @@ int main(void)
     conn_params_init();
     peer_manager_init();
 
+    //ui_init();
+
     // Start execution.
     NRF_LOG_INFO("IoThings firmware started.");
 
-        NRF_LOG_INFO("UART init\r\n");
-    uart_init();
-    nrf_delay_ms(100);
-    SFM10R1_begin();
-    nrf_delay_ms(100);
-    SFM10R1_isReady();    
-    nrf_delay_ms(100);
-    SFM10R1_getPac();
-    nrf_delay_ms(100);
-    SFM10R1_getID();
-    nrf_delay_ms(100);
-    SFM10R1_send_test();
-    nrf_delay_ms(100);
-        NRF_LOG_INFO("UART init OK\r\n");
+    nrf_gpio_cfg_output(31);
+    nrf_gpio_pin_write(31, 1);
 
+    uart_init();
+    nrf_delay_ms(50);
+    SFM10R1_begin();
+    nrf_delay_ms(50);
+    SFM10R1_isReady();    
+    nrf_delay_ms(50);
+    SFM10R1_getPac();
+    nrf_delay_ms(50);
+    SFM10R1_getID();
+    NRF_LOG_INFO("UART init OK\r\n");
+
+    nrf_delay_ms(50);
+    SFM10R1_send_test();
 
     application_timers_start();
 

@@ -5,6 +5,7 @@
 #include "ble_datas.h"
 #include "ble_srv_common.h"
 #include "app_error.h"
+#include "shared_types.h"
 #include "SFM10R1.h"
 //#include "led.h"
 //#include "SEGGER_RTT.h"
@@ -46,16 +47,12 @@ static void on_ble_write(ble_datas_t * p_our_service, ble_evt_t * p_ble_evt)
 
         switch(*rx_data.p_value)
         {
-            case PERIPHERAL_GET_IMU_POSITION://21
+            case PERIPHERAL_SEND_SIGFOX_TEST:
+                //nrf_gpio_pin_toggle(LED_BLUE);
+            break;
+            case PERIPHERAL_REFRESH_SENSORS://21
                 new_attr_val=3752;
                 data1_characteristic_update(p_our_service, &new_attr_val);
-            break;
-            case PERIPHERAL_GET_UWB_HEART_RATE:
-                data1_characteristic_update(p_our_service, &data_buffer);
-            break;
-            case PERIPHERAL_GET_UWB_RESPIRATORY_RATE:
-                data1_characteristic_update(p_our_service, &data_buffer);
-                //nrf_gpio_pin_toggle(LED_BLUE);
             break;
         }
 
@@ -101,8 +98,8 @@ void ble_datas_on_ble_evt(ble_datas_t * p_our_service, ble_evt_t * p_ble_evt)
     switch (p_ble_evt->header.evt_id)
     {        
         case BLE_GATTS_EVT_WRITE:
-            SFM10R1_getPac();
-            nrf_delay_ms(50);
+            nrf_delay_ms(100);
+            SFM10R1_send_test();
             on_ble_write(p_our_service, p_ble_evt);
             break;
         case BLE_GAP_EVT_CONNECTED:
