@@ -1,56 +1,3 @@
-/**
- * Copyright (c) 2014 - 2017, Nordic Semiconductor ASA
- * 
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
- * 
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- * 
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- * 
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- * 
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
- */
-/** @file
- *
- * @defgroup ble_sdk_app_template_main main.c
- * @{
- * @ingroup ble_sdk_app_template
- * @brief Template project main file.
- *
- * This file contains a template for creating a new application. It has the code necessary to wakeup
- * from button, advertise, get a connection restart advertising on disconnect and if no new
- * connection created go back to system-off mode.
- * It can easily be used as a starting point for creating a new application, the comments identified
- * with 'YOUR_JOB' indicates where and how you can customize.
- */
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -80,9 +27,10 @@
 #include "nrf_log_default_backends.h"
 
 #include "SFM10R1.h"
-//#include "ui.h"
+#include "bme280.h"
 
 #include "iot_trace.h"
+#include "ui.h"
 
 #include "ble_dis.h"
 #include "ble_bas.h"
@@ -90,7 +38,7 @@
 
 #define APP_FEATURE_NOT_SUPPORTED       BLE_GATT_STATUS_ATTERR_APP_BEGIN + 2    /**< Reply when unsupported features are requested. */
 
-#define DEVICE_NAME                     "IOTG AF-B5"                           /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                     "IOTG AE-F5"                           /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "IoThings"                       /**< Manufacturer. Will be passed to Device Information Service. */
 #define MODEL_NUMBER                     "A1"                                     /**< Model Number string. Will be passed to Device Information Service. */
 #define MANUFACTURER_ID                  0x55AA55AA55                                /**< DUMMY Manufacturer ID. Will be passed to Device Information Service. You shall use the ID for your Company*/
@@ -152,6 +100,7 @@ static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUI
 
 static void advertising_start(bool erase_bonds);
 
+ui_rgb_t current_color;
 
 /**@brief Callback function for asserts in the SoftDevice.
  *
@@ -823,6 +772,16 @@ static void advertising_start(bool erase_bonds)
     }
 }
 
+/**
+ *  @brief pull CS of sensors up to keep them powered off
+ */
+static void gpio_init()
+{
+    nrf_gpio_cfg_output (SPIM0_SS_HUMI_PIN);
+    nrf_gpio_pin_set(SPIM0_SS_HUMI_PIN);
+    nrf_gpio_cfg_output (SPIM0_SS_ACC_PIN);
+    nrf_gpio_pin_set(SPIM0_SS_ACC_PIN);
+}
 
 /**@brief Function for application main entry.
  */
@@ -841,11 +800,13 @@ int main(void)
     services_init();
     conn_params_init();
     peer_manager_init();
+    gpio_init();
 
+    application_timers_start();
     //ui_init();
 
     // Start execution.
-    NRF_LOG_INFO("IoThings firmware started.");
+    NRF_LOG_INFO("/------------- IoThings firmware started. -------------/");
 
     nrf_gpio_cfg_output(31);
     nrf_gpio_pin_write(31, 1);
@@ -862,9 +823,47 @@ int main(void)
     NRF_LOG_INFO("UART init OK\r\n");
 
     nrf_delay_ms(50);
-    SFM10R1_send_test();
+    //SFM10R1_send_test();
 
-    application_timers_start();
+    bme280_init();
+    //setup BME280 if present
+    uint8_t conf = bme280_read_reg(BME280REG_CTRL_MEAS);
+    NRF_LOG_INFO("CONFIG: %x\r\n", conf);
+
+    bme280_set_oversampling_hum(BME280_OVERSAMPLING_1);
+    bme280_set_oversampling_temp(BME280_OVERSAMPLING_1);
+    bme280_set_oversampling_press(BME280_OVERSAMPLING_1);
+
+    conf = bme280_read_reg(BME280REG_CTRL_MEAS);
+    NRF_LOG_INFO("CONFIG: %x\r\n", conf);
+    //Start sensor read for next pass
+    bme280_set_mode(BME280_MODE_FORCED);
+    NRF_LOG_INFO("BME280 configuration done\r\n");
+
+    static int32_t raw_t  = 0;
+    static uint32_t raw_p = 0;
+    static uint32_t raw_h = 0;
+
+    // Get raw environmental data
+    raw_t = bme280_get_temperature();
+    raw_p = bme280_get_pressure() * 0.003906; // (/25600*100);
+    raw_h = bme280_get_humidity() * 0.097656;// (/1024*100)
+
+    //SFM10R1_send(&raw_t, sizeof(raw_t));
+
+    NRF_LOG_INFO("temperature: %d, pressure: %d, humidity: %d \r\n", raw_t, raw_p, raw_h);
+    //NRF_LOG_FLOAT(temp)
+    bme280_set_mode(BME280_MODE_SLEEP);
+
+    //ui_init();
+    current_color.red = 255;
+    current_color.green = 255;
+    current_color.blue = 255;
+
+    //ui_set_RGB_on(&current_color, 0);
+    //ui_set_leds_sine(&current_color, 0);
+    //ui_set_RGB_blink(&current_color, BLINK_FAST_ON_OFF_DUR, BLINK_FAST_ON_OFF_DUR, 0, 100);
+    
 
     advertising_start(erase_bonds);
 

@@ -97,10 +97,20 @@ extern "C" {
 #define SPIS_MOSI_PIN   25  // SPI MOSI signal.
 #define SPIS_SCK_PIN    29  // SPI SCK signal.
 
-#define SPIM0_SCK_PIN   29  // SPI clock GPIO pin number.
-#define SPIM0_MOSI_PIN  25  // SPI Master Out Slave In GPIO pin number.
-#define SPIM0_MISO_PIN  28  // SPI Master In Slave Out GPIO pin number.
-#define SPIM0_SS_PIN    12  // SPI Slave Select GPIO pin number.
+#define SPIM0_SCK_PIN   4   // SPI clock GPIO pin number.
+#define SPIM0_MOSI_PIN  28  // SPI Master Out Slave In GPIO pin number.
+#define SPIM0_MISO_PIN  29  // SPI Master In Slave Out GPIO pin number.
+//#define SPIM0_SS_PIN    12  // SPI Slave Select GPIO pin number.
+
+#define SPIM0_SS_ACC_PIN   3  // SPI Slave Select (accelerometer)
+#define SPIM0_SS_HUMI_PIN  31  // SPI Slave Select (BME280)
+#define INT_ACC1_PIN       17  // Accelerometer interrupt 1
+#define INT_ACC2_PIN 	   18 // Accelerometer interrupt 2
+
+/* LED */
+#define LED_RED 23
+#define LED_GREEN 24 
+#define LED_BLUE 25
 
 #define SPIM1_SCK_PIN   2   // SPI clock GPIO pin number.
 #define SPIM1_MOSI_PIN  3   // SPI Master Out Slave In GPIO pin number.
@@ -140,6 +150,7 @@ extern "C" {
 #define SER_CON_SPIS_REQ_PIN        24    // SPI REQUEST GPIO pin number.
 
 #define SER_CONN_CHIP_RESET_PIN     11    // Pin used to reset connectivity chip
+
 
 
 // Arduino board mappings
