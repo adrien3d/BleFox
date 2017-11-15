@@ -1,5 +1,9 @@
 #include "ui.h"
 
+/*Ticks before change duty cycle of each LED*/
+#define TICKS_BEFORE_CHANGE_0   500
+#define TICKS_BEFORE_CHANGE_1   400
+
 // Bitmasks for the three LEDs
 #define LED_BLUE_MASK       (1 << LED_BLUE)
 #define LED_RED_MASK        (1 << LED_RED)
@@ -11,31 +15,11 @@ static low_power_pwm_t low_power_pwm_blue;
 static low_power_pwm_t low_power_pwm_red;
 static low_power_pwm_t low_power_pwm_green;
 
-static bool pwm_enabled;
+static bool pwm_enabled = false;
 
 
 //app_timer_start(ui_timer_id, UI_TIMER_INTERVAL, NULL);
 //app_timer_stop(ui_timer_id);
-
-
-/**
-*	@brief Starts the low power pwm instances
-*/
-static void _start_pwm()
-{
-    if (pwm_enabled)
-        return;
-
-    uint32_t err_code;
-    err_code = low_power_pwm_start((&low_power_pwm_blue), low_power_pwm_blue.bit_mask);
-    APP_ERROR_CHECK(err_code);
-    err_code = low_power_pwm_start((&low_power_pwm_red), low_power_pwm_red.bit_mask);
-    APP_ERROR_CHECK(err_code);
-    err_code = low_power_pwm_start((&low_power_pwm_green), low_power_pwm_green.bit_mask);
-    APP_ERROR_CHECK(err_code);
-
-    pwm_enabled = true;
-}
 
 /**
 *	@brief Stops the low power pwm instances
@@ -63,10 +47,13 @@ static void _start_pwm()
 /*static void _lfclk_init(void)
 {
     uint32_t err_code;
+
+    if (nrf_drv_clock_init_check()) NRF_LOG_INFO("Init already");
+
     err_code = nrf_drv_clock_init();
-    //if (err_code != MODULE_ALREADY_INITIALIZED && err_code != NRF_SUCCESS)
-    if (err_code != NRF_SUCCESS)
+    if (err_code == NRF_ERROR_MODULE_ALREADY_INITIALIZED)
     {
+    	NRF_LOG_INFO("Module already init");
         APP_ERROR_CHECK(err_code);
     }
 
@@ -85,42 +72,62 @@ static void _low_power_init(void)
     low_power_pwm_config_t low_power_pwm_config;
 
     APP_TIMER_DEF(lpp_timer_0);
-    low_power_pwm_config.active_high = false;
-    low_power_pwm_config.period = 255;
-    low_power_pwm_config.bit_mask = LED_BLUE_MASK;
-    low_power_pwm_config.p_timer_id = &lpp_timer_0;
-
-    err_code = low_power_pwm_init((&low_power_pwm_blue), &low_power_pwm_config, NULL);
-    APP_ERROR_CHECK(err_code);
-    err_code = low_power_pwm_duty_set(&low_power_pwm_blue, 0);
-    APP_ERROR_CHECK(err_code);
-
-    APP_TIMER_DEF(lpp_timer_1);
-    low_power_pwm_config.active_high = false;
-    low_power_pwm_config.period = 255;
-    low_power_pwm_config.bit_mask = LED_RED_MASK;
-    low_power_pwm_config.p_timer_id = &lpp_timer_1;
+    low_power_pwm_config.active_high    = false;
+    low_power_pwm_config.period         = 255;
+    low_power_pwm_config.bit_mask       = LED_RED_MASK;
+    low_power_pwm_config.p_timer_id     = &lpp_timer_0;
+    low_power_pwm_config.p_port         = NRF_GPIO;
 
     err_code = low_power_pwm_init((&low_power_pwm_red), &low_power_pwm_config, NULL);
     APP_ERROR_CHECK(err_code);
-    err_code = low_power_pwm_duty_set(&low_power_pwm_red, 0);
+    err_code = low_power_pwm_duty_set(&low_power_pwm_red, 35);
     APP_ERROR_CHECK(err_code);
 
-    APP_TIMER_DEF(lpp_timer_2);
-    low_power_pwm_config.active_high = false;
-    low_power_pwm_config.period = 255;
-    low_power_pwm_config.bit_mask = LED_GREEN_MASK;
-    low_power_pwm_config.p_timer_id = &lpp_timer_2;
+    APP_TIMER_DEF(lpp_timer_1);
+    low_power_pwm_config.active_high    = false;
+    low_power_pwm_config.period         = 255;
+    low_power_pwm_config.bit_mask       = LED_GREEN_MASK;
+    low_power_pwm_config.p_timer_id     = &lpp_timer_1;
+    low_power_pwm_config.p_port         = NRF_GPIO;
 
     err_code = low_power_pwm_init((&low_power_pwm_green), &low_power_pwm_config, NULL);
     APP_ERROR_CHECK(err_code);
     err_code = low_power_pwm_duty_set(&low_power_pwm_green, 0);
     APP_ERROR_CHECK(err_code);
 
-    pwm_enabled = false;
+    APP_TIMER_DEF(lpp_timer_2);
+    low_power_pwm_config.active_high    = false;
+    low_power_pwm_config.period         = 255;
+    low_power_pwm_config.bit_mask       = LED_BLUE_MASK;
+    low_power_pwm_config.p_timer_id     = &lpp_timer_2;
+    low_power_pwm_config.p_port         = NRF_GPIO;
+
+    err_code = low_power_pwm_init((&low_power_pwm_blue), &low_power_pwm_config, NULL);
+    APP_ERROR_CHECK(err_code);
+    err_code = low_power_pwm_duty_set(&low_power_pwm_blue, 102);
+    APP_ERROR_CHECK(err_code);
 }
 
-static void _set_pwm(ui_channel_t channel, uint32_t duty)
+/**
+*	@brief Starts the low power pwm instances
+*/
+static void _start_pwm()
+{
+    if (pwm_enabled)
+        return;
+
+    uint32_t err_code;
+    err_code = low_power_pwm_start((&low_power_pwm_blue), low_power_pwm_blue.bit_mask);
+    APP_ERROR_CHECK(err_code);
+    err_code = low_power_pwm_start((&low_power_pwm_red), low_power_pwm_red.bit_mask);
+    APP_ERROR_CHECK(err_code);
+    err_code = low_power_pwm_start((&low_power_pwm_green), low_power_pwm_green.bit_mask);
+    APP_ERROR_CHECK(err_code);
+
+    pwm_enabled = true;
+}
+
+void ui_set_led_duty(ui_channel_t channel, uint32_t duty)
 {
     switch (channel)
     {
@@ -138,6 +145,14 @@ static void _set_pwm(ui_channel_t channel, uint32_t duty)
     }
 }
 
+
+void ui_set_RGB_duty(uint32_t duty_red, uint32_t duty_green, uint32_t duty_blue)
+{
+    low_power_pwm_duty_set(&low_power_pwm_red, (uint8_t)duty_red);
+    low_power_pwm_duty_set(&low_power_pwm_green, (uint8_t)duty_green);
+    low_power_pwm_duty_set(&low_power_pwm_blue, (uint8_t)duty_blue);
+}
+
 /**
 *	@brief Initialise the user interface consisting of 3 LEDS (RGB)
 */
@@ -150,8 +165,10 @@ void ui_init(void)
 
 	_start_pwm();
 
-	//_set_pwm(UI_LED_GREEN, 100);
-	_set_pwm(UI_LED_GREEN, 100);
+	ui_set_led_duty(UI_LED_RED, 35);
+	ui_set_led_duty(UI_LED_GREEN, 0);
+	ui_set_led_duty(UI_LED_BLUE, 102);
+
     //Create the ui timer
     //uint32_t err_code = app_timer_create(&ui_timer_id, APP_TIMER_MODE_REPEATED, ui_timer_handler);
     //APP_ERROR_CHECK(err_code);

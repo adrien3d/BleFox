@@ -14,6 +14,8 @@ SRC_FILES += \
   $(PROJ_DIR)/../common/drivers/ble_datas.c \
   $(PROJ_DIR)/../common/drivers/SFM10R1.c \
   $(PROJ_DIR)/../common/drivers/bme280.c \
+  $(PROJ_DIR)/../common/drivers/LIS2DH12.c \
+  $(PROJ_DIR)/../common/drivers/acceleration.c \
   $(PROJ_DIR)/../common/drivers/ui.c \
   $(SDK_ROOT)/components/ble/ble_services/ble_bas/ble_bas.c \
   $(SDK_ROOT)/components/ble/ble_services/ble_dis/ble_dis.c \
@@ -89,97 +91,79 @@ INC_FOLDERS += \
   $(PROJ_DIR)/../common/drivers \
   $(PROJ_DIR)/../common/include \
   $(PROJ_DIR)/config \
-  $(SDK_ROOT)/components/drivers_nrf/comp \
-  $(SDK_ROOT)/components/libraries/experimental_cli \
-  $(SDK_ROOT)/components/drivers_nrf/twi_master \
-  $(SDK_ROOT)/components/libraries/low_power_pwm \
-  $(SDK_ROOT)/components/softdevice/s132/headers/nrf52 \
-  $(SDK_ROOT)/components/libraries/usbd/class/cdc/acm \
-  $(SDK_ROOT)/components/libraries/usbd/class/hid/generic \
-  $(SDK_ROOT)/components/libraries/usbd/class/msc \
-  $(SDK_ROOT)/components/libraries/usbd/class/hid \
-  $(SDK_ROOT)/components/ble/ble_services/ble_lbs \
-  $(SDK_ROOT)/components/ble/ble_services/ble_gls \
-  $(SDK_ROOT)/components/libraries/fstorage \
-  $(SDK_ROOT)/components/drivers_nrf/i2s \
-  $(SDK_ROOT)/components/libraries/mutex \
-  $(SDK_ROOT)/components/libraries/gpiote \
-  $(SDK_ROOT)/components/libraries/experimental_log/src \
-  $(SDK_ROOT)/components/drivers_nrf/gpiote \
-  $(SDK_ROOT)/components/boards \
-  $(SDK_ROOT)/components/libraries/experimental_memobj \
-  $(SDK_ROOT)/components/drivers_nrf/common \
-  $(SDK_ROOT)/components/ble/ble_advertising \
-  $(SDK_ROOT)/components/ble/ble_services/ble_bas \
-  $(SDK_ROOT)/components/ble/ble_services/ble_dis \
-  $(SDK_ROOT)/components/libraries/queue \
-  $(SDK_ROOT)/components/libraries/pwr_mgmt \
-  $(SDK_ROOT)/components/ble/ble_dtm \
-  $(SDK_ROOT)/components/toolchain/cmsis/include \
-  $(SDK_ROOT)/components/drivers_nrf/uart \
-  $(SDK_ROOT)/components/ble/common \
-  $(SDK_ROOT)/components/drivers_nrf/wdt \
-  $(SDK_ROOT)/components/drivers_nrf/spi_master \
-  $(SDK_ROOT)/components/libraries/bsp \
-  $(SDK_ROOT)/components/libraries/experimental_section_vars \
-  $(SDK_ROOT)/components/softdevice/s132/headers \
-  $(SDK_ROOT)/components/libraries/mem_manager \
-  $(SDK_ROOT)/external/segger_rtt \
-  $(SDK_ROOT)/components/libraries/usbd/class/cdc \
-  $(SDK_ROOT)/components/drivers_nrf/hal \
-  $(SDK_ROOT)/components/drivers_nrf/rtc \
-  $(SDK_ROOT)/components/softdevice/common \
-  $(SDK_ROOT)/components/libraries/usbd/class/hid/mouse \
-  $(SDK_ROOT)/components/libraries/ecc \
-  $(SDK_ROOT)/components/drivers_nrf/ppi \
-  $(SDK_ROOT)/components/ble/ble_services/ble_dfu \
-  $(SDK_ROOT)/external/fprintf \
-  $(SDK_ROOT)/components/drivers_nrf/twis_slave \
-  $(SDK_ROOT)/components/libraries/atomic \
   $(SDK_ROOT)/components \
-  $(SDK_ROOT)/components/libraries/scheduler \
-  $(SDK_ROOT)/components/libraries/experimental_log \
-  $(SDK_ROOT)/components/drivers_nrf/delay \
-  $(SDK_ROOT)/components/libraries/crc16 \
-  $(SDK_ROOT)/components/drivers_nrf/timer \
-  $(SDK_ROOT)/components/libraries/util \
-  $(SDK_ROOT)/components/libraries/csense_drv \
-  $(SDK_ROOT)/components/libraries/csense \
-  $(SDK_ROOT)/components/libraries/balloc \
-  $(SDK_ROOT)/components/libraries/hardfault \
-  $(SDK_ROOT)/components/libraries/uart \
-  $(SDK_ROOT)/components/libraries/hci \
-  $(SDK_ROOT)/components/libraries/usbd/class/hid/kbd \
-  $(SDK_ROOT)/components/drivers_nrf/spi_slave \
-  $(SDK_ROOT)/components/drivers_nrf/lpcomp \
-  $(SDK_ROOT)/components/libraries/timer \
-  $(SDK_ROOT)/components/drivers_nrf/rng \
-  $(SDK_ROOT)/components/drivers_nrf/power \
-  $(SDK_ROOT)/components/libraries/usbd/config \
-  $(SDK_ROOT)/components/toolchain \
-  $(SDK_ROOT)/components/libraries/led_softblink \
-  $(SDK_ROOT)/components/drivers_nrf/qdec \
-  $(SDK_ROOT)/components/drivers_nrf/spi_master \
-  $(SDK_ROOT)/components/libraries/strerror \
-  $(SDK_ROOT)/components/drivers_nrf/pdm \
-  $(SDK_ROOT)/components/libraries/crc32 \
-  $(SDK_ROOT)/components/libraries/sensorsim \
-  $(SDK_ROOT)/components/ble/peer_manager \
-  $(SDK_ROOT)/components/drivers_nrf/swi \
+  $(SDK_ROOT)/components/boards \
+  $(SDK_ROOT)/components/ble/ble_advertising \
+  $(SDK_ROOT)/components/ble/ble_dtm \
+  $(SDK_ROOT)/components/ble/ble_services/ble_bas \
+  $(SDK_ROOT)/components/ble/ble_services/ble_dfu \
   $(SDK_ROOT)/components/ble/ble_services/ble_dis \
-  $(SDK_ROOT)/components/device \
-  $(SDK_ROOT)/components/libraries/fifo \
+  $(SDK_ROOT)/components/ble/common \
   $(SDK_ROOT)/components/ble/nrf_ble_gatt \
   $(SDK_ROOT)/components/ble/nrf_ble_qwr \
-  $(SDK_ROOT)/components/libraries/button \
-  $(SDK_ROOT)/components/libraries/usbd \
-  $(SDK_ROOT)/components/drivers_nrf/saadc \
-  $(SDK_ROOT)/components/libraries/atomic_fifo \
   $(SDK_ROOT)/components/ble/ble_racp \
-  $(SDK_ROOT)/components/toolchain/gcc \
-  $(SDK_ROOT)/components/libraries/fds \
-  $(SDK_ROOT)/components/libraries/twi \
+  $(SDK_ROOT)/components/ble/peer_manager \
+  $(SDK_ROOT)/components/device \
   $(SDK_ROOT)/components/drivers_nrf/clock \
+  $(SDK_ROOT)/components/drivers_nrf/common \
+  $(SDK_ROOT)/components/drivers_nrf/comp \
+  $(SDK_ROOT)/components/drivers_nrf/delay \
+  $(SDK_ROOT)/components/drivers_nrf/hal \
+  $(SDK_ROOT)/components/drivers_nrf/gpiote \
+  $(SDK_ROOT)/components/drivers_nrf/lpcomp \
+  $(SDK_ROOT)/components/drivers_nrf/pdm \
+  $(SDK_ROOT)/components/drivers_nrf/power \
+  $(SDK_ROOT)/components/drivers_nrf/ppi \
+  $(SDK_ROOT)/components/drivers_nrf/rng \
+  $(SDK_ROOT)/components/drivers_nrf/rtc \
+  $(SDK_ROOT)/components/drivers_nrf/saadc \
+  $(SDK_ROOT)/components/drivers_nrf/spi_master \
+  $(SDK_ROOT)/components/drivers_nrf/swi \
+  $(SDK_ROOT)/components/drivers_nrf/timer \
+  $(SDK_ROOT)/components/drivers_nrf/twi_master \
+  $(SDK_ROOT)/components/drivers_nrf/uart \
+  $(SDK_ROOT)/components/drivers_nrf/wdt \
+  $(SDK_ROOT)/components/libraries/atomic \
+  $(SDK_ROOT)/components/libraries/atomic_fifo \
+  $(SDK_ROOT)/components/libraries/balloc \
+  $(SDK_ROOT)/components/libraries/bsp \
+  $(SDK_ROOT)/components/libraries/button \
+  $(SDK_ROOT)/components/libraries/crc16 \
+  $(SDK_ROOT)/components/libraries/crc32 \
+  $(SDK_ROOT)/components/libraries/csense \
+  $(SDK_ROOT)/components/libraries/csense_drv \
+  $(SDK_ROOT)/components/libraries/ecc \
+  $(SDK_ROOT)/components/libraries/experimental_cli \
+  $(SDK_ROOT)/components/libraries/experimental_log \
+  $(SDK_ROOT)/components/libraries/experimental_log/src \
+  $(SDK_ROOT)/components/libraries/experimental_memobj \
+  $(SDK_ROOT)/components/libraries/experimental_section_vars \
+  $(SDK_ROOT)/components/libraries/fds \
+  $(SDK_ROOT)/components/libraries/fifo \
+  $(SDK_ROOT)/components/libraries/fstorage \
+  $(SDK_ROOT)/components/libraries/hardfault \
+  $(SDK_ROOT)/components/libraries/hci \
+  $(SDK_ROOT)/components/libraries/low_power_pwm \
+  $(SDK_ROOT)/components/libraries/mem_manager \
+  $(SDK_ROOT)/components/libraries/mutex \
+  $(SDK_ROOT)/components/libraries/pwr_mgmt \
+  $(SDK_ROOT)/components/libraries/queue \
+  $(SDK_ROOT)/components/libraries/scheduler \
+  $(SDK_ROOT)/components/libraries/sensorsim \
+  $(SDK_ROOT)/components/libraries/strerror \
+  $(SDK_ROOT)/components/libraries/timer \
+  $(SDK_ROOT)/components/libraries/twi \
+  $(SDK_ROOT)/components/libraries/uart \
+  $(SDK_ROOT)/components/libraries/util \
+  $(SDK_ROOT)/components/softdevice/common \
+  $(SDK_ROOT)/components/softdevice/s132/headers \
+  $(SDK_ROOT)/components/softdevice/s132/headers/nrf52 \
+  $(SDK_ROOT)/components/toolchain \
+  $(SDK_ROOT)/components/toolchain/cmsis/include \
+  $(SDK_ROOT)/components/toolchain/gcc \
+  $(SDK_ROOT)/external/fprintf \
+  $(SDK_ROOT)/external/segger_rtt \
+
 
 # Libraries common to all targets
 LIB_FILES += \

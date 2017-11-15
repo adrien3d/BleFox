@@ -1,17 +1,20 @@
 #ifndef __UI_H
 #define __UI_H
 
-#include <stddef.h>
-#include <string.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-#include "nordic_common.h"
+#include "nrf_delay.h"
 #include "nrf_gpio.h"
-#include "app_timer.h"
-#include "iot_trace.h"
 #include "boards.h"
-#include "low_power_pwm.h"
+#include "app_error.h"
+#include "sdk_errors.h"
+#include "app_timer.h"
+#include "nrf_log.h"
 #include "nrf_drv_clock.h"
+#include "app_util_platform.h"
+#include "low_power_pwm.h"
+#include "nordic_common.h"
 
 typedef enum
 {
@@ -37,15 +40,17 @@ typedef struct
 // Function prototypes
 void ui_init(void);
 
-void ui_set_led_off(ui_channel_t channel);
+void ui_set_led_duty(ui_channel_t channel, uint32_t duty);
+void ui_set_RGB_duty(uint32_t duty_red, uint32_t duty_green, uint32_t duty_blue);
+
+/*void ui_set_led_off(ui_channel_t channel);
 void ui_set_led_on(ui_channel_t channel, uint32_t intensity);
 void ui_set_led_dur(ui_channel_t channel, uint32_t duration, uint32_t intensity);
-void ui_set_led_duty(ui_channel_t channel, uint32_t duty);
 void ui_set_led_blink(ui_channel_t channel, uint32_t on_duration, uint32_t off_duration, uint32_t cycles, uint32_t intensity);
 void ui_set_led_table(ui_channel_t channel, uint16_t* table, uint32_t table_len, uint32_t cycles);
 
 void ui_set_RGB_off();
 void ui_set_RGB_on(ui_rgb_t* rgb, uint32_t duration);
-void ui_set_RGB_blink(ui_rgb_t* rgb, uint32_t on_duration, uint32_t off_duration, uint32_t cycles, uint32_t intensity);
+void ui_set_RGB_blink(ui_rgb_t* rgb, uint32_t on_duration, uint32_t off_duration, uint32_t cycles, uint32_t intensity);*/
 
 #endif //__UI_H

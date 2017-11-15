@@ -28,6 +28,9 @@
 
 #include "SFM10R1.h"
 #include "bme280.h"
+#include "LIS2DH12.h"
+
+#include "acceleration.h"
 
 #include "iot_trace.h"
 #include "ui.h"
@@ -783,6 +786,12 @@ static void gpio_init()
     nrf_gpio_pin_set(SPIM0_SS_ACC_PIN);
 }
 
+static void movementDetected(void)
+{
+    ui_set_RGB_duty(200, 100, 50);
+    NRF_LOG_INFO ("### Movement detected ###\n");
+}
+
 /**@brief Function for application main entry.
  */
 int main(void)
@@ -825,7 +834,14 @@ int main(void)
     nrf_delay_ms(50);
     //SFM10R1_send_test();
 
-    bme280_init();
+    BME280_Ret BME280RetVal = bme280_init();
+    if (BME280_RET_OK == BME280RetVal) {
+        NRF_LOG_INFO("BME280 init Done\r\n");
+    }
+    else {
+        NRF_LOG_ERROR("BME280 init Failed: Error Code: %d\r\n", (int32_t)BME280RetVal); 
+    }
+
     //setup BME280 if present
     uint8_t conf = bme280_read_reg(BME280REG_CTRL_MEAS);
     NRF_LOG_INFO("CONFIG: %x\r\n", conf);
@@ -835,7 +851,7 @@ int main(void)
     bme280_set_oversampling_press(BME280_OVERSAMPLING_1);
 
     conf = bme280_read_reg(BME280REG_CTRL_MEAS);
-    NRF_LOG_INFO("CONFIG: %x\r\n", conf);
+    //NRF_LOG_INFO("CONFIG: %x\r\n", conf);
     //Start sensor read for next pass
     bme280_set_mode(BME280_MODE_FORCED);
     NRF_LOG_INFO("BME280 configuration done\r\n");
@@ -855,10 +871,30 @@ int main(void)
     //NRF_LOG_FLOAT(temp)
     bme280_set_mode(BME280_MODE_SLEEP);
 
-    //ui_init();
-    current_color.red = 255;
+
+    LIS2DH12_Ret Lis2dh12RetVal = LIS2DH12_init(LIS2DH12_POWER_DOWN, LIS2DH12_SCALE2G, NULL);
+
+    if (LIS2DH12_RET_OK == Lis2dh12RetVal) {
+        NRF_LOG_INFO("LIS2DH12 init Done\r\n");
+    } 
+    else {
+        NRF_LOG_ERROR("LIS2DH12 init Failed: Error Code: %d\r\n", (int32_t)Lis2dh12RetVal);
+    } 
+    
+    LIS2DH12_setPowerMode(LIS2DH12_POWER_LOW);
+
+    int32_t accx, accy, accz;
+    LIS2DH12_getALLmG(&accx, &accy, &accz);
+    NRF_LOG_INFO("acc_x: %d, acc_y: %d, acc_Z: %d \r\n", accx, accy, accz);
+
+    //acceleration_init(); //Already done by LIS2DH12_init
+    acceleration_initMovementAlert(100,100,100,500,APP_TIMER_PRESCALER,movementDetected);
+    acceleration_initMovingAverage(10);
+
+    ui_init();
+    /*current_color.red = 255;
     current_color.green = 255;
-    current_color.blue = 255;
+    current_color.blue = 255;*/
 
     //ui_set_RGB_on(&current_color, 0);
     //ui_set_leds_sine(&current_color, 0);

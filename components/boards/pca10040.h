@@ -92,10 +92,10 @@ extern "C" {
 #define RTS_PIN_NUMBER 5
 #define HWFC           true
 
-#define SPIS_MISO_PIN   28  // SPI MISO signal.
+/*#define SPIS_MISO_PIN   28  // SPI MISO signal.
 #define SPIS_CSN_PIN    12  // SPI CSN signal.
 #define SPIS_MOSI_PIN   25  // SPI MOSI signal.
-#define SPIS_SCK_PIN    29  // SPI SCK signal.
+#define SPIS_SCK_PIN    29  // SPI SCK signal.*/
 
 #define SPIM0_SCK_PIN   4   // SPI clock GPIO pin number.
 #define SPIM0_MOSI_PIN  28  // SPI Master Out Slave In GPIO pin number.
@@ -108,9 +108,9 @@ extern "C" {
 #define INT_ACC2_PIN 	   18 // Accelerometer interrupt 2
 
 /* LED */
-#define LED_RED 23
-#define LED_GREEN 24 
-#define LED_BLUE 25
+#define LED_RED 2
+#define LED_GREEN 26 
+#define LED_BLUE 27
 
 #define SPIM1_SCK_PIN   2   // SPI clock GPIO pin number.
 #define SPIM1_MOSI_PIN  3   // SPI Master Out Slave In GPIO pin number.
