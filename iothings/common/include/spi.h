@@ -60,7 +60,7 @@ extern bool spi_isInitialized(void);
 extern SPI_Ret spi_transfer_bme280(uint8_t* const p_toWrite, uint8_t count, uint8_t* const p_toRead);
 
 /**
- * Send and receive bytes for lis2dh12 Acceleration Sensor
+ * Send and receive bytes for LIS2DS12 Acceleration Sensor
  *
  * @param[in] p_toWrite Data to transfer
  * @param[out] p_toRead Receive buffer
@@ -69,7 +69,7 @@ extern SPI_Ret spi_transfer_bme280(uint8_t* const p_toWrite, uint8_t count, uint
  * @return SPI_RET_OK SPI transfer was successful
  * @return SPI_RET_BUSY SPI is busy with other transfer, please try again
  */
-extern SPI_Ret spi_transfer_lis2dh12(uint8_t* const p_toWrite, uint8_t count, uint8_t* const p_toRead);
+extern SPI_Ret spi_transfer_LIS2DS12(uint8_t* const p_toWrite, uint8_t count, uint8_t* const p_toRead);
 
 #ifdef __cplusplus
 }

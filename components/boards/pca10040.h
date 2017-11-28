@@ -108,8 +108,8 @@ extern "C" {
 #define INT_ACC2_PIN 	   18 // Accelerometer interrupt 2
 
 /* LED */
-#define LED_RED 2
-#define LED_GREEN 26 
+#define LED_RED 26
+#define LED_GREEN 2 
 #define LED_BLUE 27
 
 #define SPIM1_SCK_PIN   2   // SPI clock GPIO pin number.

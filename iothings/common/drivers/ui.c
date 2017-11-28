@@ -80,8 +80,8 @@ static void _low_power_init(void)
 
     err_code = low_power_pwm_init((&low_power_pwm_red), &low_power_pwm_config, NULL);
     APP_ERROR_CHECK(err_code);
-    err_code = low_power_pwm_duty_set(&low_power_pwm_red, 35);
-    APP_ERROR_CHECK(err_code);
+    /*err_code = low_power_pwm_duty_set(&low_power_pwm_red, 35);
+    APP_ERROR_CHECK(err_code);*/
 
     APP_TIMER_DEF(lpp_timer_1);
     low_power_pwm_config.active_high    = false;
@@ -92,8 +92,8 @@ static void _low_power_init(void)
 
     err_code = low_power_pwm_init((&low_power_pwm_green), &low_power_pwm_config, NULL);
     APP_ERROR_CHECK(err_code);
-    err_code = low_power_pwm_duty_set(&low_power_pwm_green, 0);
-    APP_ERROR_CHECK(err_code);
+    /*err_code = low_power_pwm_duty_set(&low_power_pwm_green, 0);
+    APP_ERROR_CHECK(err_code);*/
 
     APP_TIMER_DEF(lpp_timer_2);
     low_power_pwm_config.active_high    = false;
@@ -104,8 +104,8 @@ static void _low_power_init(void)
 
     err_code = low_power_pwm_init((&low_power_pwm_blue), &low_power_pwm_config, NULL);
     APP_ERROR_CHECK(err_code);
-    err_code = low_power_pwm_duty_set(&low_power_pwm_blue, 102);
-    APP_ERROR_CHECK(err_code);
+    /*err_code = low_power_pwm_duty_set(&low_power_pwm_blue, 102);
+    APP_ERROR_CHECK(err_code);*/
 }
 
 /**
@@ -132,13 +132,13 @@ void ui_set_led_duty(ui_channel_t channel, uint32_t duty)
     switch (channel)
     {
     case UI_LED_RED:
-        low_power_pwm_duty_set(&low_power_pwm_red, (uint8_t)duty);
+        low_power_pwm_duty_set(&low_power_pwm_red, 255 - (uint8_t)duty);
         break;
     case UI_LED_GREEN:
-        low_power_pwm_duty_set(&low_power_pwm_green, (uint8_t)duty);
+        low_power_pwm_duty_set(&low_power_pwm_green, 255 - (uint8_t)duty);
         break;
     case UI_LED_BLUE:
-        low_power_pwm_duty_set(&low_power_pwm_blue, (uint8_t)duty);
+        low_power_pwm_duty_set(&low_power_pwm_blue, 255 - (uint8_t)duty);
         break;
     default:
         break;
@@ -148,9 +148,23 @@ void ui_set_led_duty(ui_channel_t channel, uint32_t duty)
 
 void ui_set_RGB_duty(uint32_t duty_red, uint32_t duty_green, uint32_t duty_blue)
 {
-    low_power_pwm_duty_set(&low_power_pwm_red, (uint8_t)duty_red);
-    low_power_pwm_duty_set(&low_power_pwm_green, (uint8_t)duty_green);
-    low_power_pwm_duty_set(&low_power_pwm_blue, (uint8_t)duty_blue);
+    low_power_pwm_duty_set(&low_power_pwm_red, 255 - (uint8_t)duty_red);
+    low_power_pwm_duty_set(&low_power_pwm_green, 255 - (uint8_t)duty_green);
+    low_power_pwm_duty_set(&low_power_pwm_blue, 255 - (uint8_t)duty_blue);
+}
+
+void ui_set_RGB_on(ui_rgb_t* color)
+{
+    low_power_pwm_duty_set(&low_power_pwm_red, 255 - (uint8_t)color->red);
+    low_power_pwm_duty_set(&low_power_pwm_green, 255 - (uint8_t)color->green);
+    low_power_pwm_duty_set(&low_power_pwm_blue, 255 - (uint8_t)color->blue);
+}
+
+void ui_set_RGB_off()
+{
+    low_power_pwm_duty_set(&low_power_pwm_red, 255);
+    low_power_pwm_duty_set(&low_power_pwm_green, 255);
+    low_power_pwm_duty_set(&low_power_pwm_blue, 255);
 }
 
 /**
@@ -164,10 +178,6 @@ void ui_init(void)
     _low_power_init();
 
 	_start_pwm();
-
-	ui_set_led_duty(UI_LED_RED, 35);
-	ui_set_led_duty(UI_LED_GREEN, 0);
-	ui_set_led_duty(UI_LED_BLUE, 102);
 
     //Create the ui timer
     //uint32_t err_code = app_timer_create(&ui_timer_id, APP_TIMER_MODE_REPEATED, ui_timer_handler);

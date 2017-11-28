@@ -28,7 +28,7 @@
 
 #include "SFM10R1.h"
 #include "bme280.h"
-#include "LIS2DH12.h"
+#include "LIS2DS12.h"
 
 #include "acceleration.h"
 
@@ -872,31 +872,35 @@ int main(void)
     bme280_set_mode(BME280_MODE_SLEEP);
 
 
-    LIS2DH12_Ret Lis2dh12RetVal = LIS2DH12_init(LIS2DH12_POWER_DOWN, LIS2DH12_SCALE2G, NULL);
+    LIS2DS12_Ret LIS2DS12RetVal = LIS2DS12_init(LIS2DS12_POWER_DOWN, LIS2DS12_SCALE2G, NULL);
 
-    if (LIS2DH12_RET_OK == Lis2dh12RetVal) {
-        NRF_LOG_INFO("LIS2DH12 init Done\r\n");
+    if (LIS2DS12_RET_OK == LIS2DS12RetVal) {
+        NRF_LOG_INFO("LIS2DS12 init Done\r\n");
     } 
     else {
-        NRF_LOG_ERROR("LIS2DH12 init Failed: Error Code: %d\r\n", (int32_t)Lis2dh12RetVal);
+        NRF_LOG_ERROR("LIS2DS12 init Failed: Error Code: %d\r\n", (int32_t)LIS2DS12RetVal);
     } 
     
-    LIS2DH12_setPowerMode(LIS2DH12_POWER_LOW);
+    LIS2DS12_setPowerMode(LIS2DS12_POWER_LOW);
 
     int32_t accx, accy, accz;
-    LIS2DH12_getALLmG(&accx, &accy, &accz);
+    LIS2DS12_getALLmG(&accx, &accy, &accz);
     NRF_LOG_INFO("acc_x: %d, acc_y: %d, acc_Z: %d \r\n", accx, accy, accz);
 
-    //acceleration_init(); //Already done by LIS2DH12_init
+    //acceleration_init(); //Already done by LIS2DS12_init
     acceleration_initMovementAlert(100,100,100,500,APP_TIMER_PRESCALER,movementDetected);
     acceleration_initMovingAverage(10);
 
     ui_init();
-    /*current_color.red = 255;
+    current_color.red = 255;
     current_color.green = 255;
-    current_color.blue = 255;*/
+    current_color.blue = 255;
 
-    //ui_set_RGB_on(&current_color, 0);
+    ui_set_RGB_on(&current_color);
+    nrf_delay_ms(200);
+    ui_set_RGB_off();
+    nrf_delay_ms(200);
+    ui_set_RGB_duty(100, 200, 0);
     //ui_set_leds_sine(&current_color, 0);
     //ui_set_RGB_blink(&current_color, BLINK_FAST_ON_OFF_DUR, BLINK_FAST_ON_OFF_DUR, 0, 100);
     

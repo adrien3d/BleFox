@@ -42,6 +42,8 @@ void ui_init(void);
 
 void ui_set_led_duty(ui_channel_t channel, uint32_t duty);
 void ui_set_RGB_duty(uint32_t duty_red, uint32_t duty_green, uint32_t duty_blue);
+void ui_set_RGB_on(ui_rgb_t* color);
+void ui_set_RGB_off();
 
 /*void ui_set_led_off(ui_channel_t channel);
 void ui_set_led_on(ui_channel_t channel, uint32_t intensity);

@@ -48,7 +48,7 @@ extern void spi_init(void)
     nrf_gpio_cfg_output(SPIM0_SS_HUMI_PIN);
     nrf_gpio_pin_set(SPIM0_SS_HUMI_PIN);
 
-    /* Init chipselect for LIS2DH12 */
+    /* Init chipselect for LIS2DS12 */
     nrf_gpio_pin_dir_set(SPIM0_SS_ACC_PIN, NRF_GPIO_PIN_DIR_OUTPUT);
     nrf_gpio_cfg_output(SPIM0_SS_ACC_PIN);
     nrf_gpio_pin_set(SPIM0_SS_ACC_PIN);
@@ -99,7 +99,7 @@ extern SPI_Ret spi_transfer_bme280(uint8_t* const p_toWrite, uint8_t count, uint
     return retVal;
 }
 
-extern SPI_Ret spi_transfer_lis2dh12(uint8_t* const p_toWrite, uint8_t count, uint8_t* const p_toRead)
+extern SPI_Ret spi_transfer_LIS2DS12(uint8_t* const p_toWrite, uint8_t count, uint8_t* const p_toRead)
 {
     SPI_Ret retVal = SPI_RET_OK;
     if ((NULL == p_toWrite) || (NULL == p_toRead))

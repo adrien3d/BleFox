@@ -14,7 +14,7 @@ SRC_FILES += \
   $(PROJ_DIR)/../common/drivers/ble_datas.c \
   $(PROJ_DIR)/../common/drivers/SFM10R1.c \
   $(PROJ_DIR)/../common/drivers/bme280.c \
-  $(PROJ_DIR)/../common/drivers/LIS2DH12.c \
+  $(PROJ_DIR)/../common/drivers/LIS2DS12.c \
   $(PROJ_DIR)/../common/drivers/acceleration.c \
   $(PROJ_DIR)/../common/drivers/ui.c \
   $(SDK_ROOT)/components/ble/ble_services/ble_bas/ble_bas.c \
