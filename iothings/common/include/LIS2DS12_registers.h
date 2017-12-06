@@ -70,7 +70,7 @@
 #define LIS2DS_ODR_MASK_200HZ   	0x60 /*HR / Normal / Low Power */
 #define LIS2DS_ODR_MASK_400HZ   	0x70 /*HR / Normal / Low Power */
 #define LIS2DS_ODR_MASK_1620HZ  	0x80 /* Low Power Mode only */
-#define LIS2DS_ODR_MASK_HIGH_RES 	s0x90 /* in HR+Normal: 1344Hz, in Low Power 5376Hz */
+#define LIS2DS_ODR_MASK_HIGH_RES 	0x90 /* in HR+Normal: 1344Hz, in Low Power 5376Hz */
 #define LIS2DS_LPEN_MASK 			0x08
 #define LIS2DS_Z_EN_MASK 			0x04
 #define LIS2DS_Y_EN_MASK 			0x02

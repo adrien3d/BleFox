@@ -865,14 +865,14 @@ int main(void)
     raw_p = bme280_get_pressure() * 0.003906; // (/25600*100);
     raw_h = bme280_get_humidity() * 0.097656;// (/1024*100)
 
+    bme280_set_mode(BME280_MODE_SLEEP);
     //SFM10R1_send(&raw_t, sizeof(raw_t));
 
     NRF_LOG_INFO("temperature: %d, pressure: %d, humidity: %d \r\n", raw_t, raw_p, raw_h);
     //NRF_LOG_FLOAT(temp)
-    bme280_set_mode(BME280_MODE_SLEEP);
 
 
-    LIS2DS12_Ret LIS2DS12RetVal = LIS2DS12_init(LIS2DS12_POWER_DOWN, LIS2DS12_SCALE2G, NULL);
+    LIS2DS12_Ret LIS2DS12RetVal = LIS2DS12_init(LIS2DS12_POWER_LOW, LIS2DS12_SCALE2G, NULL);
 
     if (LIS2DS12_RET_OK == LIS2DS12RetVal) {
         NRF_LOG_INFO("LIS2DS12 init Done\r\n");

@@ -112,7 +112,7 @@ extern LIS2DS12_Ret LIS2DS12_init(LIS2DS12_PowerMode powerMode, LIS2DS12_Scale s
     APP_ERROR_CHECK(err_code);
     //Timer is started when power mode is set
 
-    /* Start Selftest */
+    // Start Selftest
     retVal |= selftest();
 
     if (LIS2DS12_RET_OK == retVal)
