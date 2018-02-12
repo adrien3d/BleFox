@@ -135,6 +135,8 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
         case PM_EVT_BONDED_PEER_CONNECTED:
         {
             NRF_LOG_INFO("Connected to a previously bonded device.");
+            /*ui_set_RGB_duty(0, 0, 255);
+            nrf_delay_ms(10);*/
         } break;
 
         case PM_EVT_CONN_SEC_SUCCEEDED:
@@ -496,12 +498,16 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
     {
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("Disconnected.");
+            /*ui_set_RGB_duty(255, 0, 0);
+            nrf_delay_ms(10);*/
             err_code = bsp_indication_set(BSP_INDICATE_IDLE);
             APP_ERROR_CHECK(err_code);
             break;
 
         case BLE_GAP_EVT_CONNECTED:
             NRF_LOG_INFO("Connected.");
+            /*ui_set_RGB_duty(0, 255, 0);
+            nrf_delay_ms(10);*/
             err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
             APP_ERROR_CHECK(err_code);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
@@ -786,11 +792,11 @@ static void gpio_init()
     nrf_gpio_pin_set(SPIM0_SS_ACC_PIN);
 }
 
-static void movementDetected(void)
+/*static void movementDetected(void)
 {
     ui_set_RGB_duty(200, 100, 50);
     NRF_LOG_INFO ("### Movement detected ###\n");
-}
+}*/
 
 /**@brief Function for application main entry.
  */
@@ -834,7 +840,7 @@ int main(void)
     nrf_delay_ms(50);
     //SFM10R1_send_test();
 
-    BME280_Ret BME280RetVal = bme280_init();
+    /*BME280_Ret BME280RetVal = bme280_init();
     if (BME280_RET_OK == BME280RetVal) {
         NRF_LOG_INFO("BME280 init Done\r\n");
     }
@@ -868,6 +874,8 @@ int main(void)
     bme280_set_mode(BME280_MODE_SLEEP);
     //SFM10R1_send(&raw_t, sizeof(raw_t));
 
+    SFM10R1_send_test();
+
     NRF_LOG_INFO("temperature: %d, pressure: %d, humidity: %d \r\n", raw_t, raw_p, raw_h);
     //NRF_LOG_FLOAT(temp)
 
@@ -897,10 +905,9 @@ int main(void)
     current_color.blue = 255;
 
     ui_set_RGB_on(&current_color);
-    nrf_delay_ms(200);
-    ui_set_RGB_off();
-    nrf_delay_ms(200);
-    ui_set_RGB_duty(100, 200, 0);
+    nrf_delay_ms(50);
+    ui_set_RGB_off();*/
+    //ui_set_RGB_duty(100, 200, 0);
     //ui_set_leds_sine(&current_color, 0);
     //ui_set_RGB_blink(&current_color, BLINK_FAST_ON_OFF_DUR, BLINK_FAST_ON_OFF_DUR, 0, 100);
     

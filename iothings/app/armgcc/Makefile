@@ -87,7 +87,6 @@ SRC_FILES += \
 
 # Include folders common to all targets
 INC_FOLDERS += \
-  $(PROJ_DIR)/../bsp \
   $(PROJ_DIR)/../common/drivers \
   $(PROJ_DIR)/../common/include \
   $(PROJ_DIR)/config \

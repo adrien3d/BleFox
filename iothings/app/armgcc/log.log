@@ -1,0 +1,71 @@
+--------------------------------------------------------------------------------
+nrfjprog -f NRF52 --recover --log
+nrfjprog verion 9.7.2
+--------------------------------------------------------------------------------
+FUNCTION: open_dll.
+FUNCTION: open_dll.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: connect_to_emu_with_snr.
+FUNCTION: connect_to_emu_with_snr.
+FUNCTION: connect_to_emu_without_snr.
+FUNCTION: enum_emu_snr.
+Device "NRF52832_XXAA" selected.
+FUNCTION: recover.
+FUNCTION: recover.
+JLinkARM.dll CORESIGHT_WriteAPDPReg returned error -1.
+JLinkARM.dll CORESIGHT_WriteAPDPReg returned error -102.
+FUNCTION: close_dll.
+FUNCTION: close_dll.
+--------------------------------------------------------------------------------
+nrfjprog -f nRF52 --recover --log
+nrfjprog verion 9.7.2
+--------------------------------------------------------------------------------
+FUNCTION: open_dll.
+FUNCTION: open_dll.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: connect_to_emu_with_snr.
+FUNCTION: connect_to_emu_with_snr.
+FUNCTION: connect_to_emu_without_snr.
+FUNCTION: enum_emu_snr.
+Device "NRF52832_XXAA" selected.
+FUNCTION: recover.
+FUNCTION: recover.
+JLinkARM.dll CORESIGHT_WriteAPDPReg returned error -1.
+JLinkARM.dll CORESIGHT_WriteAPDPReg returned error -102.
+FUNCTION: close_dll.
+FUNCTION: close_dll.
+--------------------------------------------------------------------------------
+nrfjprog -device nRF52 --recover --log
+nrfjprog verion 9.7.2
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+nrfjprog -device nRF52 --recover --log
+nrfjprog verion 9.7.2
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+nrfjprog -f nRF52 --recover --log
+nrfjprog verion 9.7.2
+--------------------------------------------------------------------------------
+FUNCTION: open_dll.
+FUNCTION: open_dll.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: enum_emu_snr.
+FUNCTION: connect_to_emu_with_snr.
+FUNCTION: connect_to_emu_with_snr.
+FUNCTION: connect_to_emu_without_snr.
+FUNCTION: enum_emu_snr.
+Device "NRF52832_XXAA" selected.
+FUNCTION: recover.
+FUNCTION: recover.
+JLinkARM.dll CORESIGHT_WriteAPDPReg returned error -1.
+JLinkARM.dll CORESIGHT_WriteAPDPReg returned error -102.
+FUNCTION: close_dll.
+FUNCTION: close_dll.

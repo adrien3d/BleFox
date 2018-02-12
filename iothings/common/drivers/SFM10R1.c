@@ -130,8 +130,8 @@ void SFM10R1_send_test(){
     app_uart_put((uint8_t)'S');
     app_uart_put((uint8_t)'F');
     app_uart_put((uint8_t)'=');
-    app_uart_put((uint8_t)'4');
-    app_uart_put((uint8_t)'2');
+    app_uart_put((uint8_t)'6');
+    app_uart_put((uint8_t)'9');
     app_uart_put((uint8_t)'\r');
 }
 
